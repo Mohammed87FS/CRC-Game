@@ -29,32 +29,40 @@ private int[,] mapLayout = {
         GenerateMap();
     }
 
-    void GenerateMap()
-    {
-       
-        float groundWidth = mapLayout.GetLength(0) * spacing;
-        float groundHeight = mapLayout.GetLength(1) * spacing;
+   void GenerateMap()
+{
+    float groundWidth = mapLayout.GetLength(0) * spacing;
+    float groundHeight = mapLayout.GetLength(1) * spacing;
+
+    float minY = float.MaxValue;
 
    
-        GameObject ground = Instantiate(groundPrefab, new Vector3(groundWidth / 2 - spacing / 2, -0.1f, groundHeight / 2 - spacing / 2), Quaternion.identity);
-        ground.transform.localScale = new Vector3(groundWidth, 1, groundHeight);
-
-      
-        for (int i = 0; i < mapLayout.GetLength(0); i++)
+    for (int i = 0; i < mapLayout.GetLength(0); i++)
+    {
+        for (int j = 0; j < mapLayout.GetLength(1); j++)
         {
-            for (int j = 0; j < mapLayout.GetLength(1); j++)
+            int prefabIndex = mapLayout[i, j];
+            if (prefabIndex >= 0 && prefabIndex < prefabTypes.Length)
             {
-                int prefabIndex = mapLayout[i, j];
-                if (prefabIndex >= 0 && prefabIndex < prefabTypes.Length)
+             
+                Vector3 position = new Vector3(i * spacing, 0, j * spacing);
+                GameObject block = Instantiate(prefabTypes[prefabIndex], position, Quaternion.identity);
+                
+              
+                if (block.transform.position.y < minY)
                 {
-                    Vector3 position = new Vector3(i * spacing, 0, j * spacing);
-                    Instantiate(prefabTypes[prefabIndex], position, Quaternion.identity);
+                    minY = block.transform.position.y;
                 }
             }
         }
-
-  
     }
+
+    
+    GameObject ground = Instantiate(groundPrefab, new Vector3(groundWidth / 2 - spacing / 2, minY - 1.0f, groundHeight / 2 - spacing / 2), Quaternion.identity);
+    ground.transform.localScale = new Vector3(groundWidth, 1, groundHeight);
+}
+
+
 
    
 }
