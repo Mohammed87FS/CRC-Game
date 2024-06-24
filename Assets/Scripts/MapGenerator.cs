@@ -3,29 +3,29 @@ using UnityEngine;
 
 public class MapGenerator : MonoBehaviour
 {
-    public GameObject[] prefabTypes; // prefabs indexed from 1 to n, index 0 can be null if you prefer to keep it in the array
+    public GameObject[] prefabTypes;
     public GameObject groundPrefab;
-    public float spacing = 1.1f;
+    public float spacing = 1f;
 
-       private int[,] mapLayout = {
-    {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
-    {1, 0, 0, 0, 1, 2, 2, 2, 2, 2, 0, 0, 0, 0, 1},
-    {1, 0, 1, 0, 1, 2, 1, 1, 1, 2, 0, 1, 1, 0, 1},
-    {1, 0, 1, 0, 0, 0, 1, 2, 1, 0, 0, 1, 2, 0, 1},
-    {1, 1, 1, 0, 1, 1, 1, 2, 1, 1, 0, 1, 2, 0, 1},
-    {1, 2, 1, 0, 0, 0, 0, 0, 0, 1, 0, 1, 2, 0, 1},
-    {1, 2, 1, 1, 1, 1, 1, 1, 0, 1, 0, 1, 2, 0, 1},
-    {1, 2, 2, 2, 2, 2, 1, 2, 0, 0, 0, 1, 2, 0, 1},
-    {1, 1, 1, 1, 1, 2, 1, 2, 1, 1, 1, 1, 2, 1, 1},
-    {1, 0, 0, 0, 0, 2, 0, 2, 0, 2, 2, 2, 2, 0, 1},
-    {1, 0, 1, 1, 0, 1, 0, 2, 0, 1, 1, 1, 1, 0, 1},
-    {1, 0, 1, 2, 2, 2, 0, 2, 0, 1, 2, 2, 2, 0, 1},
-    {1, 0, 1, 2, 1, 1, 0, 2, 0, 0, 0, 0, 0, 0, 1},
-    {1, 0, 0, 0, 1, 2, 2, 2, 2, 1, 1, 1, 1, 1, 1},
-    {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1}
-};
+    private int[,] mapLayout = {
+        {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
+        {1, 0, 0, 0, 1, 2, 2, 2, 2, 2, 0, 0, 0, 0, 1},
+        {1, 0, 1, 0, 1, 2, 1, 1, 1, 2, 0, 1, 1, 0, 1},
+        {1, 0, 1, 0, 0, 0, 1, 2, 1, 0, 0, 1, 2, 0, 1},
+        {1, 1, 1, 0, 1, 1, 1, 2, 1, 1, 0, 1, 2, 0, 1},
+        {1, 2, 1, 0, 0, 0, 0, 0, 0, 1, 0, 1, 2, 0, 1},
+        {1, 2, 1, 1, 1, 1, 1, 1, 0, 1, 0, 1, 2, 0, 1},
+        {1, 2, 2, 2, 2, 2, 1, 2, 0, 0, 0, 1, 2, 0, 1},
+        {1, 1, 1, 1, 1, 2, 1, 2, 1, 1, 1, 1, 2, 1, 1},
+        {1, 0, 0, 0, 0, 2, 0, 2, 0, 2, 2, 2, 2, 0, 1},
+        {1, 0, 1, 1, 0, 1, 0, 2, 0, 1, 1, 1, 1, 0, 1},
+        {1, 0, 1, 2, 2, 2, 0, 2, 0, 1, 2, 2, 2, 0, 1},
+        {1, 0, 1, 2, 1, 1, 0, 2, 0, 0, 0, 0, 0, 0, 1},
+        {1, 0, 0, 0, 1, 2, 2, 2, 2, 1, 1, 1, 1, 1, 1},
+        {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1}
+    };
 
-    private Dictionary<Vector3, int> occupiedPositions = new Dictionary<Vector3, int>();
+    private List<GameObject> allBlocks = new List<GameObject>();
     private List<GameObject> type2Blocks = new List<GameObject>();
 
     private void Start()
@@ -44,12 +44,14 @@ public class MapGenerator : MonoBehaviour
             for (int j = 0; j < mapLayout.GetLength(1); j++)
             {
                 int prefabIndex = mapLayout[i, j];
-                if (prefabIndex != 0) 
+                if (prefabIndex != 0)
                 {
                     Vector3 position = new Vector3(i * spacing, 0, j * spacing);
                     GameObject block = Instantiate(prefabTypes[prefabIndex - 1], position, Quaternion.identity);
+                    block.AddComponent<Rigidbody>().isKinematic = true; 
+                    block.AddComponent<BoxCollider>(); 
 
-                    occupiedPositions[position] = prefabIndex;
+                    allBlocks.Add(block);
 
                     if (prefabIndex == 2)
                     {
@@ -94,14 +96,34 @@ public class MapGenerator : MonoBehaviour
             moveDirection = Vector3.right * spacing;
         }
 
-        foreach (GameObject block in type2Blocks)
+        if (moveDirection != Vector3.zero)
         {
-            Vector3 newPosition = block.transform.position + moveDirection;
-            if (!occupiedPositions.ContainsKey(newPosition))
+            HashSet<Vector3> occupiedPositions = new HashSet<Vector3>();
+
+           
+            foreach (GameObject block in allBlocks)
             {
-                occupiedPositions.Remove(block.transform.position);
-                occupiedPositions.Add(newPosition, 2);
-                block.transform.position = newPosition;
+                occupiedPositions.Add(block.transform.position);
+            }
+
+            List<GameObject> movableBlocks = new List<GameObject>();
+
+            foreach (GameObject block in type2Blocks)
+            {
+                Vector3 newPosition = block.transform.position + moveDirection;
+
+                if (!occupiedPositions.Contains(newPosition))
+                {
+                    movableBlocks.Add(block);
+                    occupiedPositions.Add(newPosition); 
+                }
+            }
+
+       
+            foreach (GameObject block in movableBlocks)
+            {
+                Rigidbody rb = block.GetComponent<Rigidbody>();
+                rb.MovePosition(block.transform.position + moveDirection);
             }
         }
     }
