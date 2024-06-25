@@ -55,13 +55,12 @@ public class DialogUI : MonoBehaviour
         }
     }
 
-   void EndDialog()
+    void EndDialog()
     {
-        
-        var dialogSystem = FindObjectOfType<MapGenerator>();
-        if (dialogSystem != null)
+        var mapGenerator = FindObjectOfType<MapGenerator>();
+        if (mapGenerator != null)
         {
-            dialogSystem.StartGame();
+            mapGenerator.StartGame();
         }
         else
         {

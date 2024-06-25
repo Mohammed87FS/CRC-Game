@@ -2,15 +2,15 @@
     "nodes": [
         {
             "nodeID": 0,
-            "dialogText": "Welcome to the game!",
+            "dialogText": "HI, wanna know how to play?!",
             "responses": [
                 {
-                    "responseText": "Thanks!",
+                    "responseText": "Yes!",
                     "nextNodeID": 1
                 },
                 {
-                    "responseText": "What should I do?",
-                    "nextNodeID": 2
+                    "responseText": "Nope.",
+                    "nextNodeID": 3
                 }
             ]
         },
@@ -20,7 +20,12 @@
             "responses": [
                 {
                     "responseText": "Got it!",
-                    "nextNodeID": -1
+                    "nextNodeID": 3
+                }
+                ,
+                {
+                    "responseText": "What else?",
+                    "nextNodeID": 2
                 }
             ]
         },
@@ -30,6 +35,16 @@
             "responses": [
                 {
                     "responseText": "Understood!",
+                    "nextNodeID": 3
+                }
+            ]
+        },
+        {
+            "nodeID": 3,
+            "dialogText": "Alright, Enjoy!!.",
+            "responses": [
+                {
+                    "responseText": "Thanks!",
                     "nextNodeID": -1
                 }
             ]
