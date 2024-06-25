@@ -8,11 +8,11 @@ public class MapGenerator : MonoBehaviour
     public GameObject groundPrefab;
     public GameObject ballPrefab;
     public float spacing = 1f;
-private bool isLevelWon = false;
+    private bool isLevelWon = false;
     private int[,] currentLevel;
     private int currentLevelIndex = 1;
-
-   private int[,] LevelOne ={
+    private float levelTimer;
+    private int[,] LevelOne ={
 
 
         {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
@@ -65,12 +65,10 @@ private bool isLevelWon = false;
     {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1}
 };
 
-   private List<GameObject> allBlocks = new List<GameObject>();
+    private List<GameObject> allBlocks = new List<GameObject>();
     private List<GameObject> type2Blocks = new List<GameObject>();
     private List<GameObject> type3Blocks = new List<GameObject>();
     private List<GameObject> type4Blocks = new List<GameObject>();
-
-
 
     private void Start()
     {
@@ -81,6 +79,29 @@ private bool isLevelWon = false;
     {
         currentLevel = level;
         GenerateMap();
+        SetLevelTimer();
+    }
+
+    void SetLevelTimer()
+    {
+        if (currentLevelIndex == 1)
+        {
+            levelTimer = 40f; 
+        }
+        else if (currentLevelIndex == 2)
+        {
+            levelTimer = 120f; 
+        }
+        UpdateUIManagerTimer();
+    }
+
+    void UpdateUIManagerTimer()
+    {
+        UIManager uiManager = FindObjectOfType<UIManager>();
+        if (uiManager != null)
+        {
+            uiManager.SetLevelDuration(GetLevelDuration());
+        }
     }
 
     void GenerateMap()
@@ -144,6 +165,7 @@ private bool isLevelWon = false;
     private void Update()
     {
         MoveType2Blocks();
+        UpdateLevelTimer();
         CheckWinCondition();
     }
 
@@ -223,20 +245,34 @@ private bool isLevelWon = false;
             isLevelWon = true;
             CheckWinCondition();
         }
-      
+        else if (type2Blocks.Contains(target))
+        {
+            Destroy(ball);
+        }
+    }
+
+    void UpdateLevelTimer()
+    {
+        if (levelTimer > 0)
+        {
+            levelTimer -= Time.deltaTime;
+        }
+        else
+        {
+            SceneManager.LoadScene("GameOverScene");
+        }
     }
 
     void CheckWinCondition()
     {
-        if (IsLevelWon() && currentLevelIndex==1)
+        if (IsLevelWon() && currentLevelIndex == 1)
         {
             LoadNextLevel();
-            isLevelWon=false;
+            isLevelWon = false;
         }
-
-        else if (IsLevelWon() && currentLevelIndex==2)
+        else if (IsLevelWon() && currentLevelIndex == 2)
         {
-          SceneManager.LoadScene("WinScene");
+            SceneManager.LoadScene("WinScene");
         }
     }
 
@@ -247,18 +283,20 @@ private bool isLevelWon = false;
 
     void LoadNextLevel()
     {
-
-        
         currentLevelIndex++;
         if (currentLevelIndex == 2)
         {
             LoadLevel(LevelTwo);
         }
-        // else
-        // {
-            
-        //   SceneManager.LoadScene("WinScene");
-            
-        // }
+    }
+
+    public float GetLevelTimer()
+    {
+        return levelTimer;
+    }
+
+    public float GetLevelDuration()
+    {
+        return currentLevelIndex == 1 ? 40f : 120f;
     }
 }
