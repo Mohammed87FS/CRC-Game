@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Runtime.InteropServices;
 using UnityEngine;
 
 public class MapGenerator : MonoBehaviour
@@ -7,7 +8,10 @@ public class MapGenerator : MonoBehaviour
     public GameObject groundPrefab;
     public float spacing = 1f;
 
-    private int[,] mapLayout = {
+
+private int[,] LevelOne={
+
+      
         {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
         {1, 0, 0, 0, 1, 2, 2, 2, 2, 2, 0, 0, 0, 0, 1},
         {1, 0, 1, 0, 1, 2, 1, 1, 1, 2, 0, 1, 1, 0, 1},
@@ -15,7 +19,7 @@ public class MapGenerator : MonoBehaviour
         {1, 1, 1, 0, 1, 1, 1, 2, 1, 1, 0, 1, 2, 0, 1},
         {1, 2, 1, 0, 0, 0, 0, 0, 0, 1, 0, 1, 2, 0, 1},
         {1, 2, 1, 1, 1, 1, 1, 1, 0, 1, 0, 1, 2, 0, 1},
-        {1, 2, 2, 2, 2, 2, 1, 2, 0, 0, 0, 1, 2, 0, 1},
+        {3, 2, 2, 2, 2, 2, 0, 2, 0, 0, 0, 0, 2, 0, 3},
         {1, 1, 1, 1, 1, 2, 1, 2, 1, 1, 1, 1, 2, 1, 1},
         {1, 0, 0, 0, 0, 2, 0, 2, 0, 2, 2, 2, 2, 0, 1},
         {1, 0, 1, 1, 0, 1, 0, 2, 0, 1, 1, 1, 1, 0, 1},
@@ -23,7 +27,41 @@ public class MapGenerator : MonoBehaviour
         {1, 0, 1, 2, 1, 1, 0, 2, 0, 0, 0, 0, 0, 0, 1},
         {1, 0, 0, 0, 1, 2, 2, 2, 2, 1, 1, 1, 1, 1, 1},
         {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1}
-    };
+    
+};
+    private int[,] LevelTwo = {
+    {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
+    {1, 0, 0, 0, 1, 2, 2, 2, 2, 2, 0, 0, 0, 0, 1, 1, 0, 0, 0, 2, 2, 2, 2, 2, 0, 0, 0, 0, 2, 1},
+    {1, 0, 1, 0, 1, 2, 1, 1, 1, 2, 0, 1, 1, 0, 1, 0, 1, 0, 1, 2, 1, 1, 1, 2, 0, 1, 1, 0, 0, 1},
+    {1, 0, 1, 0, 0, 0, 1, 2, 1, 0, 0, 1, 2, 0, 1, 0, 0, 0, 1, 2, 1, 0, 0, 1, 2, 0, 1, 0, 1, 1},
+    {1, 1, 1, 0, 0, 1, 1, 2, 0, 1, 0, 1, 2, 0, 1, 1, 1, 0, 1, 2, 1, 1, 0, 1, 2, 0, 1, 1, 0, 1},
+    {1, 2, 1, 0, 0, 0, 0, 0, 0, 1, 0, 1, 2, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 1, 2, 0, 1, 0, 0, 1},
+    {1, 2, 1, 1, 1, 1, 1, 1, 0, 1, 0, 1, 2, 0, 1, 1, 1, 1, 1, 1, 0, 1, 0, 1, 2, 0, 1, 1, 1, 1},
+    {1, 2, 2, 2, 2, 2, 0, 2, 0, 0, 0, 0, 2, 0, 1, 2, 2, 2, 2, 2, 0, 2, 0, 0, 0, 0, 2, 0, 1, 1},
+    {1, 1, 1, 1, 1, 2, 1, 2, 1, 1, 1, 1, 2, 1, 1, 1, 1, 1, 1, 2, 1, 2, 1, 1, 1, 1, 2, 1, 1, 1},
+    {1, 0, 0, 0, 0, 2, 0, 2, 0, 2, 2, 2, 2, 0, 1, 0, 0, 0, 0, 2, 0, 2, 0, 2, 2, 2, 2, 0, 0, 1},
+    {1, 0, 1, 1, 0, 1, 0, 2, 0, 1, 1, 0, 1, 0, 1, 0, 1, 1, 0, 1, 0, 2, 0, 1, 1, 1, 1, 0, 2, 1},
+    {1, 0, 1, 2, 2, 2, 0, 2, 0, 1, 2, 2, 2, 0, 1, 0, 1, 2, 2, 2, 0, 2, 0, 1, 2, 2, 2, 0, 2, 1},
+    {1, 0, 1, 2, 1, 1, 0, 2, 0, 0, 0, 0, 0, 0, 1, 0, 1, 2, 1, 1, 0, 2, 0, 0, 0, 0, 0, 0, 0, 1},
+    {1, 0, 0, 0, 1, 2, 2, 2, 2, 1, 1, 1, 1, 1, 1, 0, 0, 0, 1, 2, 2, 2, 2, 1, 1, 1, 1, 1, 0, 1},
+    {3, 2, 2, 2, 2, 2, 2,2 , 2, 2, 2, 2, 2,2 , 2,2 , 2, 2, 2, 2, 2, 2, 2, 2, 0, 2, 2, 2, 0, 3},
+    {1, 0, 0, 0, 1, 2, 2, 2, 2, 2, 0, 0, 0, 0, 1, 0, 0, 0, 1, 2, 2, 2, 2, 2, 0, 0, 0, 0, 2, 1},
+    {1, 0, 1, 0, 1, 2, 1, 1, 1, 2, 0, 1, 1, 0, 1, 0, 1, 0, 1, 2, 1, 1, 1, 2, 0, 1, 1, 0, 2, 1},
+    {1, 0, 1, 0, 0, 0, 1, 2, 1, 0, 0, 1, 2, 0, 0, 0, 0, 0, 1, 2, 1, 0, 0, 1, 2, 0, 1, 0, 1, 1},
+    {1, 1, 1, 0, 1, 1, 1, 2, 1, 1, 0, 1, 2, 0, 0, 1, 1, 0, 1, 2, 1, 1, 0, 1, 2, 0, 1, 1, 1, 1},
+    {1, 2, 1, 0, 0, 0, 0, 0, 0, 1, 0, 1, 2, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 1, 2, 0, 1, 0, 0, 1},
+    {1, 2, 1, 1, 1, 1, 1, 1, 0, 1, 0, 1, 2, 0, 1, 1, 1, 1, 1, 1, 0, 1, 0, 1, 2, 0, 1, 1, 1, 1},
+    {1, 2, 2, 2, 2, 2, 0, 2, 0, 0, 0, 0, 2, 0, 1, 2, 2, 2, 2, 2, 0, 2, 0, 0, 0, 0, 2, 0, 1, 1},
+    {1, 1, 1, 1, 1, 2, 1, 2, 1, 0, 1, 1, 2, 1, 0, 1, 1, 1, 1, 2, 1, 2, 1, 1, 1, 1, 2, 1, 1, 1},
+    {1, 0, 0, 0, 0, 2, 0, 2, 0, 2, 2, 2, 2, 0, 1, 0, 0, 0, 0, 2, 0, 2, 0, 2, 2, 2, 2, 0, 0, 1},
+    {1, 0, 1, 1, 0, 1, 0, 2, 0, 1, 1, 1, 1, 0, 1, 0, 1, 1, 0, 1, 0, 2, 0, 1, 1, 1, 1, 0, 1, 1},
+    {1, 0, 1, 2, 2, 2, 0, 2, 0, 1, 2, 2, 2, 0, 1, 0, 1, 2, 2, 2, 0, 2, 0, 1, 2, 2, 2, 0, 1, 1},
+    {1, 0, 1, 2, 1, 1, 0, 2, 0, 0, 0, 0, 0, 0, 1, 0, 1, 2, 1, 1, 0, 2, 0, 0, 0, 0, 0, 0, 0, 1},
+    {1, 0, 0, 0, 1, 2, 2, 2, 2, 1, 1, 0, 1, 1, 1, 0, 0, 0, 1, 2, 2, 2, 2, 1, 1, 1, 1, 1, 0, 1},
+    {1, 0, 1, 2, 0, 0, 2, 2, 2, 0, 0, 1, 0, 1, 1, 0, 2, 0, 0, 1, 0, 1, 2, 0, 0, 0, 1, 0, 2, 1},
+    {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1}
+};
+
 
     private List<GameObject> allBlocks = new List<GameObject>();
     private List<GameObject> type2Blocks = new List<GameObject>();
@@ -35,21 +73,21 @@ public class MapGenerator : MonoBehaviour
 
     void GenerateMap()
     {
-        float groundWidth = mapLayout.GetLength(0) * spacing;
-        float groundHeight = mapLayout.GetLength(1) * spacing;
+        float groundWidth = LevelOne.GetLength(0) * spacing;
+        float groundHeight = LevelOne.GetLength(1) * spacing;
         float minY = float.MaxValue;
 
-        for (int i = 0; i < mapLayout.GetLength(0); i++)
+        for (int i = 0; i < LevelOne.GetLength(0); i++)
         {
-            for (int j = 0; j < mapLayout.GetLength(1); j++)
+            for (int j = 0; j < LevelOne.GetLength(1); j++)
             {
-                int prefabIndex = mapLayout[i, j];
+                int prefabIndex = LevelOne[i, j];
                 if (prefabIndex != 0)
                 {
                     Vector3 position = new Vector3(i * spacing, 0, j * spacing);
                     GameObject block = Instantiate(prefabTypes[prefabIndex - 1], position, Quaternion.identity);
-                    block.AddComponent<Rigidbody>().isKinematic = true; 
-                    block.AddComponent<BoxCollider>(); 
+                    block.AddComponent<Rigidbody>().isKinematic = true;
+                    block.AddComponent<BoxCollider>();
 
                     allBlocks.Add(block);
 
@@ -100,7 +138,7 @@ public class MapGenerator : MonoBehaviour
         {
             HashSet<Vector3> occupiedPositions = new HashSet<Vector3>();
 
-           
+
             foreach (GameObject block in allBlocks)
             {
                 occupiedPositions.Add(block.transform.position);
@@ -115,11 +153,11 @@ public class MapGenerator : MonoBehaviour
                 if (!occupiedPositions.Contains(newPosition))
                 {
                     movableBlocks.Add(block);
-                    occupiedPositions.Add(newPosition); 
+                    occupiedPositions.Add(newPosition);
                 }
             }
 
-       
+
             foreach (GameObject block in movableBlocks)
             {
                 Rigidbody rb = block.GetComponent<Rigidbody>();
