@@ -1,17 +1,19 @@
 using System.Collections.Generic;
-using System.Runtime.InteropServices;
 using UnityEngine;
 
 public class MapGenerator : MonoBehaviour
 {
     public GameObject[] prefabTypes;
     public GameObject groundPrefab;
+    public GameObject ballPrefab;
     public float spacing = 1f;
+private bool isLevelWon = false;
+    private int[,] currentLevel;
+    private int currentLevelIndex = 1;
+
+   private int[,] LevelOne ={
 
 
-private int[,] LevelOne={
-
-      
         {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
         {1, 0, 0, 0, 1, 2, 2, 2, 2, 2, 0, 0, 0, 0, 1},
         {1, 0, 1, 0, 1, 2, 1, 1, 1, 2, 0, 1, 1, 0, 1},
@@ -19,7 +21,7 @@ private int[,] LevelOne={
         {1, 1, 1, 0, 1, 1, 1, 2, 1, 1, 0, 1, 2, 0, 1},
         {1, 2, 1, 0, 0, 0, 0, 0, 0, 1, 0, 1, 2, 0, 1},
         {1, 2, 1, 1, 1, 1, 1, 1, 0, 1, 0, 1, 2, 0, 1},
-        {3, 2, 2, 2, 2, 2, 0, 2, 0, 0, 0, 0, 2, 0, 3},
+        {4, 2, 2, 2, 2, 2, 0, 2, 0, 0, 0, 0, 2, 0, 3},
         {1, 1, 1, 1, 1, 2, 1, 2, 1, 1, 1, 1, 2, 1, 1},
         {1, 0, 0, 0, 0, 2, 0, 2, 0, 2, 2, 2, 2, 0, 1},
         {1, 0, 1, 1, 0, 1, 0, 2, 0, 1, 1, 1, 1, 0, 1},
@@ -27,7 +29,7 @@ private int[,] LevelOne={
         {1, 0, 1, 2, 1, 1, 0, 2, 0, 0, 0, 0, 0, 0, 1},
         {1, 0, 0, 0, 1, 2, 2, 2, 2, 1, 1, 1, 1, 1, 1},
         {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1}
-    
+
 };
     private int[,] LevelTwo = {
     {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
@@ -44,7 +46,7 @@ private int[,] LevelOne={
     {1, 0, 1, 2, 2, 2, 0, 2, 0, 1, 2, 2, 2, 0, 1, 0, 1, 2, 2, 2, 0, 2, 0, 1, 2, 2, 2, 0, 2, 1},
     {1, 0, 1, 2, 1, 1, 0, 2, 0, 0, 0, 0, 0, 0, 1, 0, 1, 2, 1, 1, 0, 2, 0, 0, 0, 0, 0, 0, 0, 1},
     {1, 0, 0, 0, 1, 2, 2, 2, 2, 1, 1, 1, 1, 1, 1, 0, 0, 0, 1, 2, 2, 2, 2, 1, 1, 1, 1, 1, 0, 1},
-    {3, 2, 2, 2, 2, 2, 2,2 , 2, 2, 2, 2, 2,2 , 2,2 , 2, 2, 2, 2, 2, 2, 2, 2, 0, 2, 2, 2, 0, 3},
+    {4, 2, 2, 2, 2, 2, 2,2 , 2, 2, 2, 2, 2,2 , 2,2 , 2, 2, 2, 2, 2, 2, 2, 2, 0, 2, 2, 2, 0, 3},
     {1, 0, 0, 0, 1, 2, 2, 2, 2, 2, 0, 0, 0, 0, 1, 0, 0, 0, 1, 2, 2, 2, 2, 2, 0, 0, 0, 0, 2, 1},
     {1, 0, 1, 0, 1, 2, 1, 1, 1, 2, 0, 1, 1, 0, 1, 0, 1, 0, 1, 2, 1, 1, 1, 2, 0, 1, 1, 0, 2, 1},
     {1, 0, 1, 0, 0, 0, 1, 2, 1, 0, 0, 1, 2, 0, 0, 0, 0, 0, 1, 2, 1, 0, 0, 1, 2, 0, 1, 0, 1, 1},
@@ -62,26 +64,36 @@ private int[,] LevelOne={
     {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1}
 };
 
-
-    private List<GameObject> allBlocks = new List<GameObject>();
+   private List<GameObject> allBlocks = new List<GameObject>();
     private List<GameObject> type2Blocks = new List<GameObject>();
+    private List<GameObject> type3Blocks = new List<GameObject>();
+    private List<GameObject> type4Blocks = new List<GameObject>();
+
+
 
     private void Start()
     {
+        LoadLevel(LevelOne);
+    }
+
+    void LoadLevel(int[,] level)
+    {
+        currentLevel = level;
         GenerateMap();
     }
 
     void GenerateMap()
     {
-        float groundWidth = LevelOne.GetLength(0) * spacing;
-        float groundHeight = LevelOne.GetLength(1) * spacing;
+        ClearPreviousMap();
+        float groundWidth = currentLevel.GetLength(0) * spacing;
+        float groundHeight = currentLevel.GetLength(1) * spacing;
         float minY = float.MaxValue;
 
-        for (int i = 0; i < LevelOne.GetLength(0); i++)
+        for (int i = 0; i < currentLevel.GetLength(0); i++)
         {
-            for (int j = 0; j < LevelOne.GetLength(1); j++)
+            for (int j = 0; j < currentLevel.GetLength(1); j++)
             {
-                int prefabIndex = LevelOne[i, j];
+                int prefabIndex = currentLevel[i, j];
                 if (prefabIndex != 0)
                 {
                     Vector3 position = new Vector3(i * spacing, 0, j * spacing);
@@ -94,6 +106,14 @@ private int[,] LevelOne={
                     if (prefabIndex == 2)
                     {
                         type2Blocks.Add(block);
+                    }
+                    else if (prefabIndex == 3)
+                    {
+                        type3Blocks.Add(block);
+                    }
+                    else if (prefabIndex == 4)
+                    {
+                        type4Blocks.Add(block);
                     }
 
                     if (block.transform.position.y < minY)
@@ -108,9 +128,22 @@ private int[,] LevelOne={
         ground.transform.localScale = new Vector3(groundWidth, 1, groundHeight);
     }
 
+    void ClearPreviousMap()
+    {
+        foreach (GameObject block in allBlocks)
+        {
+            Destroy(block);
+        }
+        allBlocks.Clear();
+        type2Blocks.Clear();
+        type3Blocks.Clear();
+        type4Blocks.Clear();
+    }
+
     private void Update()
     {
         MoveType2Blocks();
+        CheckWinCondition();
     }
 
     void MoveType2Blocks()
@@ -138,7 +171,6 @@ private int[,] LevelOne={
         {
             HashSet<Vector3> occupiedPositions = new HashSet<Vector3>();
 
-
             foreach (GameObject block in allBlocks)
             {
                 occupiedPositions.Add(block.transform.position);
@@ -157,12 +189,67 @@ private int[,] LevelOne={
                 }
             }
 
-
             foreach (GameObject block in movableBlocks)
             {
                 Rigidbody rb = block.GetComponent<Rigidbody>();
                 rb.MovePosition(block.transform.position + moveDirection);
             }
+        }
+
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            ShootBall();
+        }
+    }
+
+    void ShootBall()
+    {
+        foreach (GameObject shooter in type4Blocks)
+        {
+            GameObject ball = Instantiate(ballPrefab, shooter.transform.position, Quaternion.identity);
+            Rigidbody rb = ball.AddComponent<Rigidbody>();
+            rb.useGravity = false;
+            BallController ballController = ball.AddComponent<BallController>();
+            ballController.SetTarget(type3Blocks, OnBallCollision, type2Blocks);
+        }
+    }
+
+    void OnBallCollision(GameObject ball, GameObject target)
+    {
+        if (type3Blocks.Contains(target))
+        {
+            Destroy(ball);
+            isLevelWon = true;
+            CheckWinCondition();
+        }
+      
+    }
+
+    void CheckWinCondition()
+    {
+        if (IsLevelWon())
+        {
+            LoadNextLevel();
+        }
+    }
+
+    bool IsLevelWon()
+    {
+        return isLevelWon;
+    }
+
+    void LoadNextLevel()
+    {
+        currentLevelIndex++;
+        if (currentLevelIndex == 2)
+        {
+            LoadLevel(LevelTwo);
+        }
+        else
+        {
+            
+            //  SceneManager.LoadScene("NextScene");
+            
         }
     }
 }
