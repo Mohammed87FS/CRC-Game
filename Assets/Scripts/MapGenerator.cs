@@ -11,6 +11,9 @@ public class MapGenerator : MonoBehaviour
     public float spacing = 1f;
     private bool isLevelWon = false;
     private int[,] currentLevel;
+
+    public delegate void MapGenerated();
+    public event MapGenerated OnMapGenerated;
     private int currentLevelIndex = 1;
     private float levelTimer;
     private int[,] LevelOne ={
@@ -66,7 +69,7 @@ public class MapGenerator : MonoBehaviour
     {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1}
 };
 
-     private bool isGameStarted = false;
+    private bool isGameStarted = false;
 
     private List<GameObject> allBlocks = new List<GameObject>();
     private List<GameObject> type2Blocks = new List<GameObject>();
@@ -83,18 +86,18 @@ public class MapGenerator : MonoBehaviour
         currentLevel = level;
         GenerateMap();
         SetLevelTimer();
+        OnMapGenerated?.Invoke();
+
+        CameraController cameraController = FindObjectOfType<CameraController>();
+        if (cameraController != null)
+        {
+            cameraController.AdjustCamera();
+        }
     }
 
     void SetLevelTimer()
     {
-        if (currentLevelIndex == 1)
-        {
-            levelTimer = 20f;
-        }
-        else if (currentLevelIndex == 2)
-        {
-            levelTimer = 60f;
-        }
+        levelTimer = (currentLevelIndex == 1) ? 20f : 60f;
         UpdateUIManagerTimer();
     }
 
@@ -305,5 +308,15 @@ public class MapGenerator : MonoBehaviour
     public void StartGame()
     {
         isGameStarted = true;
+    }
+
+    public int GetMapWidth()
+    {
+        return currentLevel.GetLength(0);
+    }
+
+    public int GetMapHeight()
+    {
+        return currentLevel.GetLength(1);
     }
 }
