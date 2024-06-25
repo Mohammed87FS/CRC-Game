@@ -3,6 +3,9 @@
         "Welcome to the game!",
         "Use WASD to move the objects.",
         "Press Space to shoot.",
+        "Make free space and .. ",
+        " hit the target before..",
+        "the time runs out.",
         "Good luck!"
     ]
 }
