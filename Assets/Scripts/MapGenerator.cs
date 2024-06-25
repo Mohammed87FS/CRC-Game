@@ -16,7 +16,10 @@ public class MapGenerator : MonoBehaviour
     public event MapGenerated OnMapGenerated;
     private int currentLevelIndex = 1;
     private float levelTimer;
-    private int[,] LevelOne ={
+
+
+
+ private int[,] LevelOne ={
 
 
         {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
@@ -68,7 +71,6 @@ public class MapGenerator : MonoBehaviour
     {1, 0, 1, 2, 0, 0, 2, 2, 2, 0, 0, 1, 0, 1, 1, 0, 2, 0, 0, 1, 0, 1, 2, 0, 0, 0, 1, 0, 2, 1},
     {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1}
 };
-
     private bool isGameStarted = false;
 
     private List<GameObject> allBlocks = new List<GameObject>();
@@ -319,4 +321,6 @@ public class MapGenerator : MonoBehaviour
     {
         return currentLevel.GetLength(1);
     }
+
+ 
 }

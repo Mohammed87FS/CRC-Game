@@ -1,11 +1,38 @@
 {
-    "dialogs": [
-        "Welcome to the game!",
-        "Use WASD to move the objects.",
-        "Press Space to shoot.",
-        "Make free space and .. ",
-        " hit the target before..",
-        "the time runs out.",
-        "Good luck!"
+    "nodes": [
+        {
+            "nodeID": 0,
+            "dialogText": "Welcome to the game!",
+            "responses": [
+                {
+                    "responseText": "Thanks!",
+                    "nextNodeID": 1
+                },
+                {
+                    "responseText": "What should I do?",
+                    "nextNodeID": 2
+                }
+            ]
+        },
+        {
+            "nodeID": 1,
+            "dialogText": "Use WASD to move the objects.",
+            "responses": [
+                {
+                    "responseText": "Got it!",
+                    "nextNodeID": -1
+                }
+            ]
+        },
+        {
+            "nodeID": 2,
+            "dialogText": "Press Space to shoot.",
+            "responses": [
+                {
+                    "responseText": "Understood!",
+                    "nextNodeID": -1
+                }
+            ]
+        }
     ]
 }
