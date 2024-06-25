@@ -150,7 +150,7 @@ Transform:
   m_GameObject: {fileID: 558809326}
   serializedVersion: 2
   m_LocalRotation: {x: 0.6990225, y: -0, z: -0, w: 0.7150997}
-  m_LocalPosition: {x: 8.631, y: 15.861, z: 7.51}
+  m_LocalPosition: {x: 14.23, y: 32.56, z: 15.49}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -356,7 +356,10 @@ MonoBehaviour:
   prefabTypes:
   - {fileID: 148168989747685337, guid: 6d125691be6623f4e98dba1db3a5b6f0, type: 3}
   - {fileID: 148168989747685337, guid: 821ab50ed62e58f43b79dd4312ec9c5d, type: 3}
+  - {fileID: 148168989747685337, guid: e3f85163f69ddf847b822db2feed8086, type: 3}
+  - {fileID: 3795016909234558959, guid: 642868b1a039c934b80bba05439bd582, type: 3}
   groundPrefab: {fileID: 3795016909234558959, guid: 642868b1a039c934b80bba05439bd582, type: 3}
+  ballPrefab: {fileID: 910620014345964578, guid: 6367055596695a240a3aa5ac0018542d, type: 3}
   spacing: 1
 --- !u!1660057539 &9223372036854775807
 SceneRoots:

@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class MapGenerator : MonoBehaviour
 {
@@ -227,9 +228,15 @@ private bool isLevelWon = false;
 
     void CheckWinCondition()
     {
-        if (IsLevelWon())
+        if (IsLevelWon() && currentLevelIndex==1)
         {
             LoadNextLevel();
+            isLevelWon=false;
+        }
+
+        else if (IsLevelWon() && currentLevelIndex==2)
+        {
+          SceneManager.LoadScene("WinScene");
         }
     }
 
@@ -240,16 +247,18 @@ private bool isLevelWon = false;
 
     void LoadNextLevel()
     {
+
+        
         currentLevelIndex++;
         if (currentLevelIndex == 2)
         {
             LoadLevel(LevelTwo);
         }
-        else
-        {
+        // else
+        // {
             
-            //  SceneManager.LoadScene("NextScene");
+        //   SceneManager.LoadScene("WinScene");
             
-        }
+        // }
     }
 }
