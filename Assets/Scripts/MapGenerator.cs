@@ -89,11 +89,11 @@ public class MapGenerator : MonoBehaviour
     {
         if (currentLevelIndex == 1)
         {
-            levelTimer = 40f;
+            levelTimer = 20f;
         }
         else if (currentLevelIndex == 2)
         {
-            levelTimer = 120f;
+            levelTimer = 60f;
         }
         UpdateUIManagerTimer();
     }
@@ -299,7 +299,7 @@ public class MapGenerator : MonoBehaviour
 
     public float GetLevelDuration()
     {
-        return currentLevelIndex == 1 ? 40f : 120f;
+        return currentLevelIndex == 1 ? 20f : 60f;
     }
 
     public void StartGame()
