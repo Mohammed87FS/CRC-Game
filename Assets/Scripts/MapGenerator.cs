@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using System.Linq;
 using UnityEngine.SceneManagement;
 
 public class MapGenerator : MonoBehaviour
@@ -65,6 +66,8 @@ public class MapGenerator : MonoBehaviour
     {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1}
 };
 
+     private bool isGameStarted = false;
+
     private List<GameObject> allBlocks = new List<GameObject>();
     private List<GameObject> type2Blocks = new List<GameObject>();
     private List<GameObject> type3Blocks = new List<GameObject>();
@@ -86,11 +89,11 @@ public class MapGenerator : MonoBehaviour
     {
         if (currentLevelIndex == 1)
         {
-            levelTimer = 40f; 
+            levelTimer = 40f;
         }
         else if (currentLevelIndex == 2)
         {
-            levelTimer = 120f; 
+            levelTimer = 120f;
         }
         UpdateUIManagerTimer();
     }
@@ -164,6 +167,19 @@ public class MapGenerator : MonoBehaviour
 
     private void Update()
     {
+        if (!isGameStarted)
+        {
+            DialogSystem dialogSystem = FindObjectOfType<DialogSystem>();
+            if (dialogSystem != null && dialogSystem.IsGameStarted())
+            {
+                isGameStarted = true;
+            }
+            else
+            {
+                return;
+            }
+        }
+
         MoveType2Blocks();
         UpdateLevelTimer();
         CheckWinCondition();
@@ -192,25 +208,11 @@ public class MapGenerator : MonoBehaviour
 
         if (moveDirection != Vector3.zero)
         {
-            HashSet<Vector3> occupiedPositions = new HashSet<Vector3>();
+            var occupiedPositions = new HashSet<Vector3>(allBlocks.Select(block => block.transform.position));
 
-            foreach (GameObject block in allBlocks)
-            {
-                occupiedPositions.Add(block.transform.position);
-            }
-
-            List<GameObject> movableBlocks = new List<GameObject>();
-
-            foreach (GameObject block in type2Blocks)
-            {
-                Vector3 newPosition = block.transform.position + moveDirection;
-
-                if (!occupiedPositions.Contains(newPosition))
-                {
-                    movableBlocks.Add(block);
-                    occupiedPositions.Add(newPosition);
-                }
-            }
+            var movableBlocks = type2Blocks
+                .Where(block => !occupiedPositions.Contains(block.transform.position + moveDirection))
+                .ToList();
 
             foreach (GameObject block in movableBlocks)
             {
@@ -298,5 +300,10 @@ public class MapGenerator : MonoBehaviour
     public float GetLevelDuration()
     {
         return currentLevelIndex == 1 ? 40f : 120f;
+    }
+
+    public void StartGame()
+    {
+        isGameStarted = true;
     }
 }

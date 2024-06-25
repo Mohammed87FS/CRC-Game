@@ -1,0 +1,8 @@
+{
+    "dialogs": [
+        "Welcome to the game!",
+        "Use WASD to move the objects.",
+        "Press Space to shoot.",
+        "Good luck!"
+    ]
+}
