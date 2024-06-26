@@ -2,24 +2,29 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
 using UnityEngine.SceneManagement;
+using Unity.VisualScripting;
 
 public class MapGenerator : MonoBehaviour
 {
+    // Public variables
     public GameObject[] prefabTypes;
     public GameObject groundPrefab;
     public GameObject ballPrefab;
     public float spacing = 1f;
+
+    // Private variables
     private bool isLevelWon = false;
     private int[,] currentLevel;
-
-    public delegate void MapGenerated();
-    public event MapGenerated OnMapGenerated;
     private int currentLevelIndex = 1;
     private float levelTimer;
+    private bool isGameStarted = false;
 
+    // Event for map generation
+    public delegate void MapGenerated();
+    public event MapGenerated OnMapGenerated;
 
-
- private int[,] LevelOne ={
+    // Level data 
+    private int[,] LevelOne ={
 
 
         {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
@@ -71,18 +76,23 @@ public class MapGenerator : MonoBehaviour
     {1, 0, 1, 2, 0, 0, 2, 2, 2, 0, 0, 1, 0, 1, 1, 0, 2, 0, 0, 1, 0, 1, 2, 0, 0, 0, 1, 0, 2, 1},
     {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1}
 };
-    private bool isGameStarted = false;
 
+    // Lists to hold different types of blocks
     private List<GameObject> allBlocks = new List<GameObject>();
     private List<GameObject> type2Blocks = new List<GameObject>();
     private List<GameObject> type3Blocks = new List<GameObject>();
     private List<GameObject> type4Blocks = new List<GameObject>();
+
+
 
     private void Start()
     {
         LoadLevel(LevelOne);
     }
 
+
+
+    // Load a level and generate the map
     void LoadLevel(int[,] level)
     {
         currentLevel = level;
@@ -90,6 +100,7 @@ public class MapGenerator : MonoBehaviour
         SetLevelTimer();
         OnMapGenerated?.Invoke();
 
+        // Adjust the camera after the map is generated
         CameraController cameraController = FindObjectOfType<CameraController>();
         if (cameraController != null)
         {
@@ -97,12 +108,14 @@ public class MapGenerator : MonoBehaviour
         }
     }
 
+    // Set the timer for the current level
     void SetLevelTimer()
     {
         levelTimer = (currentLevelIndex == 1) ? 20f : 60f;
         UpdateUIManagerTimer();
     }
 
+    // Update the timer in the UI
     void UpdateUIManagerTimer()
     {
         UIManager uiManager = FindObjectOfType<UIManager>();
@@ -112,6 +125,7 @@ public class MapGenerator : MonoBehaviour
         }
     }
 
+    // Generate the map based on the current level data
     void GenerateMap()
     {
         ClearPreviousMap();
@@ -133,6 +147,7 @@ public class MapGenerator : MonoBehaviour
 
                     allBlocks.Add(block);
 
+                    // Categorize blocks based on their type
                     if (prefabIndex == 2)
                     {
                         type2Blocks.Add(block);
@@ -154,10 +169,12 @@ public class MapGenerator : MonoBehaviour
             }
         }
 
+
         GameObject ground = Instantiate(groundPrefab, new Vector3(groundWidth / 2 - spacing / 2, minY - 1.0f, groundHeight / 2 - spacing / 2), Quaternion.identity);
         ground.transform.localScale = new Vector3(groundWidth, 1, groundHeight);
     }
 
+    // Clear the previous map before generating a new one
     void ClearPreviousMap()
     {
         foreach (GameObject block in allBlocks)
@@ -169,6 +186,7 @@ public class MapGenerator : MonoBehaviour
         type3Blocks.Clear();
         type4Blocks.Clear();
     }
+
 
     private void Update()
     {
@@ -190,6 +208,8 @@ public class MapGenerator : MonoBehaviour
         CheckWinCondition();
     }
 
+
+    // Move type2 blocks based on input (using Linq)
     void MoveType2Blocks()
     {
         Vector3 moveDirection = Vector3.zero;
@@ -232,6 +252,7 @@ public class MapGenerator : MonoBehaviour
         }
     }
 
+    // Shoot a ball from type4 blocks
     void ShootBall()
     {
         foreach (GameObject shooter in type4Blocks)
@@ -244,6 +265,7 @@ public class MapGenerator : MonoBehaviour
         }
     }
 
+    // Handle ball collisions
     void OnBallCollision(GameObject ball, GameObject target)
     {
         if (type3Blocks.Contains(target))
@@ -258,6 +280,7 @@ public class MapGenerator : MonoBehaviour
         }
     }
 
+    // Update the level timer
     void UpdateLevelTimer()
     {
         if (levelTimer > 0)
@@ -270,6 +293,7 @@ public class MapGenerator : MonoBehaviour
         }
     }
 
+    // Check if the win condition is met
     void CheckWinCondition()
     {
         if (IsLevelWon() && currentLevelIndex == 1)
@@ -283,11 +307,13 @@ public class MapGenerator : MonoBehaviour
         }
     }
 
+    // Check if the current level is won
     bool IsLevelWon()
     {
         return isLevelWon;
     }
 
+    // Load the next level
     void LoadNextLevel()
     {
         currentLevelIndex++;
@@ -297,30 +323,33 @@ public class MapGenerator : MonoBehaviour
         }
     }
 
+    // Get the current level timer
     public float GetLevelTimer()
     {
         return levelTimer;
     }
 
+    // Get the duration of the current level
     public float GetLevelDuration()
     {
         return currentLevelIndex == 1 ? 20f : 60f;
     }
 
+    // Start the game
     public void StartGame()
     {
         isGameStarted = true;
     }
 
+    // Get the width of the current map
     public int GetMapWidth()
     {
         return currentLevel.GetLength(0);
     }
 
+    // Get the height of the current map
     public int GetMapHeight()
     {
         return currentLevel.GetLength(1);
     }
-
- 
 }
